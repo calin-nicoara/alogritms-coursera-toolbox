@@ -11,8 +11,7 @@ public class FibonacciTest {
     @ParameterizedTest(name = "{index} => number={0}, fibonacci={1}")
     @CsvSource({
             "12, 144",
-            "20, 6765",
-            "67, 44945570212853"
+            "20, 6765"
     })
     public void calculateFibonacciSlow(final int number, final long fibonacci) {
         Assertions.assertEquals(fibonacci, Fibonacci.calc_fib_slow(number));
