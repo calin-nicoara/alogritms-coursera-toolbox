@@ -2,16 +2,45 @@ package week4.lottery;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrganizingLottery {
 
-    public static List<Integer> calculateNumberOfSegmentContainingThePoints(
-            final List<Integer> points, final List<Segment> segmentList) {
+    public static Map<Integer, Integer> calculateNumberOfSegmentContainingThePoints(
+            final List<Integer> initialPoints, final List<Segment> segmentList) {
+
+        if(initialPoints.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Set<Point> pointsSorted = new TreeSet<>();
+
+        initialPoints.forEach(i -> pointsSorted.add(new Point(i, Point.Type.INITIAL)));
+        segmentList.forEach(segment -> {
+            pointsSorted.add(new Point(segment.leftPoint, Point.Type.LEFT));
+            pointsSorted.add(new Point(segment.rightPoint, Point.Type.RIGHT));
+        });
 
 
-        return Collections.emptyList();
+        Map<Integer, Integer> pointIntersections = new HashMap<>();
+        AtomicInteger segmentsOpened = new AtomicInteger();
+
+        pointsSorted.forEach(point -> {
+            if(point.type.equals(Point.Type.LEFT)) {
+                segmentsOpened.incrementAndGet();
+            } else if(point.type.equals(Point.Type.RIGHT)) {
+                segmentsOpened.decrementAndGet();
+            } else {
+                pointIntersections.put(point.value, segmentsOpened.get());
+            }
+        });
+
+        return pointIntersections;
     }
 
     public static List<Integer> calculateNumberOfSegmentContainingThePointsInefficent(
